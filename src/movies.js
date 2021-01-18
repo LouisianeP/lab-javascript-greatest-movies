@@ -12,7 +12,9 @@ getAllDirectors(movies);
 
 
 // _Bonus_: It seems some of the directors had directed multiple movies so they will pop up multiple times in the array of directors. How could you "clean" a bit this array and make it unified (without duplicates)?
-
+directors.filter(function (director,i) {
+    return directors.indexOf(director) === i
+})
 
 
 // Iteration 2: Steven Spielberg. The best? - How many drama movies did STEVEN SPIELBERG direct?
@@ -121,24 +123,29 @@ function turnHoursToMinutes(movies) {
 
 // BONUS - Iteration 8: Best yearly rate average - Best yearly rate average
 function bestYearAvg(movies) {
-    const yearsAndRate = movies.map(function(movie){
-        return {
-        year: movie.year,
-        rate: movie.rate
-        };
+    if (movies.length === 0) return null
+    else{
+        const yearsAndRate = movies.map(function(movie){
+            return {
+            year: movie.year,
+            rate: movie.rate
+            };
+            });
+
+        const uniqArray= [];
+        for (movie of yearsAndRate) {
+        if (uniqArray.filter(mov => mov.year === movie.year).length == 0) {
+            uniqArray.push(movie)
+        }
+        else {
+        let index = uniqArray.findIndex(mov => mov.year === movie.year)
+        uniqArray[index].rate = (uniqArray[index].rate + movie.rate)/2
+        }
+        }
+        const sortedArray = uniqArray.sort(function(a,b) {
+        if (b.rate>a.rate) return 1;
+        else if (b.rate<a.rate) return -1;
         });
-        
-    const array= yearsAndRate[0];
-
-    for (movie of yearsAndRate) {
-      if (array.year.indexOf(movie.year) == -1) {
-          array.push(movie)
-      }
-      else {
-        ind=array.year.indexOf(movie.year)
-        array[ind].rate=(array[ind].rate+movie.rate)/2
-      }
+      return `The best year was ${uniqArray[0].year} with an average rate of ${uniqArray[0].rate}`
     }
-    return array;
 }
-
